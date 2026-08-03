@@ -1,0 +1,37 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+*.obj
+*.iobj
+*.ipdb
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.log
+*.recipe
+*.lastbuildstate
+
+# Generated packages and temporary files
+*.zip
+*.tmp
+*.bak
+
+# OS/editor metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+*~

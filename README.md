@@ -157,4 +157,4 @@ BosaiVoiceDesk から利用する場合は、`WavVoiceShaper.exe` と `WavVoiceS
 
 通常のビルドには追加ダウンロードは不要です。`tools/Download_WORLD_for_WavVoiceShaper.ps1` は保守用で、実行時点の `master.zip` を取得して同梱ソースを置き換えるため、再現性が必要なビルドではそのまま実行せず、取得元のタグとハッシュを固定してください。
 
-WavVoiceShaper 本体には、受領した提出物の中でライセンスが明示されていません。本体コードの利用・改変・再配布条件は、権利者に確認してください。
+WavVoiceShaper 固有のコードとドキュメントは [MIT License](LICENSE) で提供します。`third_party/world/` はこの MIT License の対象外で、同ディレクトリに保持している各ライセンス通知が適用されます。

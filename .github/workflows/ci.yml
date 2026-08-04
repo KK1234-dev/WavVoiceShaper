@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build x64 Release
+        run: msbuild WavVoiceShaper.sln /m /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
+
+      - name: Run repository and CLI tests
+        env:
+          WVS_EXE: ${{ github.workspace }}\x64\Release\WavVoiceShaper.exe
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WavVoiceShaper-x64-Release
+          path: |
+            x64/Release/WavVoiceShaper.exe
+            WavVoiceShaper/WavVoiceShaper.ini
+            LICENSE
+            NOTICE.md
+            WavVoiceShaper/third_party/world/LICENSE.txt
+          if-no-files-found: error

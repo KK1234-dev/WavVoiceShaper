@@ -2,8 +2,6 @@
 
 16-bit PCM WAV に、整音と声質変換をプリセットで再現可能に適用する Windows 向けコマンドラインツールです。ピーク正規化、ゲイン、DC オフセット除去、前後無音トリム、フェード、簡易 3 バンド EQ、コンプレッサー、リミッター、ノイズゲート、Builtin / WORLD ボイス変換を 1 本の処理パイプラインにまとめています。
 
-本リポジトリは、ソースコード・既定設定・使用している第三者ライブラリのソースとライセンスを揃えた提出用構成です。ビルド済みバイナリと IDE の生成物は含めていません。
-
 ## 主な特徴
 
 - INI による 13 種類のプリセットと、繰り返し指定できる `--set` / `--override`
@@ -105,9 +103,8 @@ WavVoiceShaper.exe ^
 | `1` | 引数エラー |
 | `2` | 入力ファイルなし |
 | `3` | 入力読み込み失敗、または非対応形式のコピー失敗 |
+| `4` | 処理失敗用の予約値 |
 | `5` | 出力書き込み失敗 |
-
-`4` は処理失敗用として定義されていますが、現在のコードにはこの値を返す経路がありません。
 
 ## ビルド
 
@@ -127,11 +124,26 @@ msbuild WavVoiceShaper.sln /m /p:Configuration=Release /p:Platform=x64
 
 ビルド後、現行の [`WavVoiceShaper.ini`](WavVoiceShaper/WavVoiceShaper.ini) を EXE と同じディレクトリへ配置してください。Release ビルドの実行には Visual C++ ランタイムが必要です。
 
+## 品質確認
+
+`tests/test_wav_voice_shaper.py` は、プリセット定義と第三者ライセンスの整合性に加え、合成 WAV を使って CLI の終了コード、16-bit PCM の整音、非対応形式の無加工コピーを確認します。x64 Release ビルド後、Python 3.12 以降で次のように実行できます。
+
+```powershell
+$env:WVS_EXE = (Resolve-Path ".\x64\Release\WavVoiceShaper.exe")
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+GitHub Actions の `CI` は Visual Studio 2022 の v143 toolset で x64 Release をビルドし、同じテストを実行します。プロジェクトファイルの既定 toolset は、Visual Studio 2019 向けの v142 のまま維持しています。
+
 ## リポジトリ構成
 
 ```text
 .
 ├─ WavVoiceShaper.sln
+├─ LICENSE
+├─ NOTICE.md
+├─ .github/workflows/ci.yml
+├─ tests/test_wav_voice_shaper.py
 └─ WavVoiceShaper/
    ├─ WavVoiceShaper.cpp             # CLI、WAV I/O、音声処理
    ├─ WavVoiceShaper.ini             # 13 プリセット
@@ -144,10 +156,9 @@ msbuild WavVoiceShaper.sln /m /p:Configuration=Release /p:Platform=x64
 
 BosaiVoiceDesk から利用する場合は、`WavVoiceShaper.exe` と `WavVoiceShaper.ini` を `BosaiVoiceDesk.exe` と同じディレクトリへ配置し、BosaiVoiceDesk 側の `BosaiVoiceDesk.ini` で `[VoiceShaper] Enable=1` を設定します。
 
-## 現在の制約
+## 仕様上の範囲
 
-- Windows 専用のコンソールアプリケーションです。
-- GUI、リアルタイム処理、サンプル音声、自動テストは本リポジトリに含まれません。
+- Windows 専用のコマンドラインアプリケーションで、ファイル単位のバッチ処理を対象とします。
 - 出力先ディレクトリは自動作成されません。
 - 非対応 WAV は変換せずコピーする仕様です。
 
@@ -157,4 +168,8 @@ BosaiVoiceDesk から利用する場合は、`WavVoiceShaper.exe` と `WavVoiceS
 
 通常のビルドには追加ダウンロードは不要です。`tools/Download_WORLD_for_WavVoiceShaper.ps1` は保守用で、実行時点の `master.zip` を取得して同梱ソースを置き換えるため、再現性が必要なビルドではそのまま実行せず、取得元のタグとハッシュを固定してください。
 
-WavVoiceShaper 固有のコードとドキュメントは [MIT License](LICENSE) で提供します。`third_party/world/` はこの MIT License の対象外で、同ディレクトリに保持している各ライセンス通知が適用されます。
+WavVoiceShaper のオリジナルソースコードと本プロジェクトで作成した文書は [MIT License](LICENSE) で提供します。`third_party/world/` はこの MIT License の対象外で、同ディレクトリに保持している各ライセンス通知が適用されます。配布時の表示事項は [`NOTICE.md`](NOTICE.md) にまとめています。
+
+```text
+Copyright (c) 2026 Keisuke Katahira
+```

@@ -133,7 +133,7 @@ $env:WVS_EXE = (Resolve-Path ".\x64\Release\WavVoiceShaper.exe")
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-GitHub Actions の `CI` は Visual Studio 2022 の v143 toolset で x64 Release をビルドし、同じテストを実行します。プロジェクトファイルの既定 toolset は、Visual Studio 2019 向けの v142 のまま維持しています。
+GitHub Actions の `CI` は Visual Studio 2022 の v143 toolset で x64 Release をビルドし、同じテストを実行します。配布用 artifact に PDB は含めず、EXE 内の PDB 参照がビルド環境の絶対パスではなくファイル名のみであることも確認します。プロジェクトファイルの既定 toolset は、Visual Studio 2019 向けの v142 のまま維持しています。
 
 ## リポジトリ構成
 

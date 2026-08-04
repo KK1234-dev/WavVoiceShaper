@@ -117,6 +117,30 @@ class CliTests(unittest.TestCase):
             )
             self.assertEqual(2, result.returncode)
 
+    def test_executable_uses_a_path_free_pdb_reference(self) -> None:
+        executable_data = self.executable.read_bytes()
+        pdb_references = []
+        cursor = 0
+
+        while True:
+            signature_offset = executable_data.find(b"RSDS", cursor)
+            if signature_offset < 0:
+                break
+
+            path_offset = signature_offset + 24
+            path_end = executable_data.find(b"\0", path_offset, path_offset + 1_024)
+            if path_end >= 0:
+                try:
+                    reference = executable_data[path_offset:path_end].decode("ascii")
+                except UnicodeDecodeError:
+                    reference = ""
+                if reference.lower().endswith(".pdb"):
+                    pdb_references.append(reference)
+
+            cursor = signature_offset + 4
+
+        self.assertEqual(["WavVoiceShaper.pdb"], pdb_references)
+
     def test_16_bit_pcm_is_processed_from_a_synthetic_wav(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             temporary = Path(temporary_directory)

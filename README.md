@@ -1,5 +1,7 @@
 # WavVoiceShaper（Windows / C++）
 
+[![CI](https://github.com/KK1234-dev/WavVoiceShaper/actions/workflows/ci.yml/badge.svg)](https://github.com/KK1234-dev/WavVoiceShaper/actions/workflows/ci.yml)
+
 16-bit PCM WAV に、整音と声質変換をプリセットで再現可能に適用する Windows 向けコマンドラインツールです。ピーク正規化、ゲイン、DC オフセット除去、前後無音トリム、フェード、簡易 3 バンド EQ、コンプレッサー、リミッター、ノイズゲート、Builtin / WORLD ボイス変換を 1 本の処理パイプラインにまとめています。
 
 ## 主な特徴

@@ -35,3 +35,7 @@ x86/
 Thumbs.db
 desktop.ini
 *~
+
+# Python test cache
+__pycache__/
+*.py[cod]
